@@ -11,7 +11,6 @@ class FormulaEIE(InfoExtractor):
     _TESTS = [
         {
             'url': 'https://www.fiaformulae.com/en/video/boxset/player/485168/full-race-2014-beijing-e-prix-round-1',
-
             'md5': '63d2ecad434ff32cacef03a35a9ef025',
             'info_dict': {
                 # For videos, only the 'id' and 'ext' fields are required to RUN the test:
@@ -22,22 +21,26 @@ class FormulaEIE(InfoExtractor):
                 'upload_date': '20231127',
                 'timestamp': 1701077681,
                 'duration': 2218.667,
-                'tags': [],
+                'tags': list,
+                'season': 'Season 1',
+                'season_number': 1,
                 'thumbnail': 'https://resources.formula-e.pulselive.com/formula-e/photo/2023/11/29/60afbb09-3a08-4983-b8ec-1aebd165ca62/RR_S1_BEIIJING.jpg',
-                # 'tags': 'season:1,content:registered,label:full-race,content-tag:full-races,content-tag:beijing,video:boxset-season-one,content-tag:boxset,category:racing',
-                # Then if the test run fails, it will output the missing/incorrect fields.
-                # Properties can be added as:
-                # * A value, e.g.
-                #     'title': 'Video title goes here',
-                # * MD5 checksum; start the string with 'md5:', e.g.
-                #     'description': 'md5:098f6bcd4621d373cade4e832627b4f6',
-                # * A regular expression; start the string with 're:', e.g.
-                #     'thumbnail': r're:^https?://.*\.jpg$',
-                # * A count of elements in a list; start the string with 'count:', e.g.
-                #     'tags': 'count:10',
-                # * Any Python type, e.g.
-                #     'view_count': int,
-
+            },
+        }, {
+            'url': 'https://www.fiaformulae.com/en/video/boxset/player/485337?playlistId=485829',
+            'md5': 'a17ab09ec9fa25fada709c962d5c8d1a',
+            'info_dict': {
+                'id': '6341831037112',
+                'ext': 'mp4',
+                'uploader_id': '6275361344001',
+                'title': 'FULL RACE: 2016 Marrakesh E-Prix, Round 2',
+                'upload_date': '20231128',
+                'timestamp': 1701079652,
+                'duration': 2330.603,
+                'tags': list,
+                'season': 'Season 3',
+                'season_number': 3,
+                'thumbnail': 'https://resources.formula-e.pulselive.com/formula-e/photo/2023/11/29/1d5dba68-cc70-40bf-ada4-43e968601554/RR_S3_MARRAKESH.jpg',
             },
         },
     ]
@@ -55,9 +58,14 @@ class FormulaEIE(InfoExtractor):
 
         videoplayer = extract_attributes(get_element_html_by_class('video-player', webpage))
         title = videoplayer.get('data-video-title')
+        tags = videoplayer.get('data-content-tags')
+        tags = tags.split(',')
 
         heroinfoWrapper = extract_attributes(get_element_html_by_class('hero__info-wrapper', webpage))
         date = heroinfoWrapper.get('data-video-date')
+
+        heroVideo = extract_attributes(get_element_html_by_class('hero__video', webpage))
+        season = int(heroVideo.get('data-season-tag'))
 
         return {
             'uploader_id': player_id,
@@ -66,6 +74,9 @@ class FormulaEIE(InfoExtractor):
             'upload_date': date.replace('-', ''),
             'ie_key': 'BrightcoveNew',
             'id': bc_id,
+            'tags': tags,
+            'season': f'Season {season}',
+            'season_number': season,
             '_type': 'url_transparent',
             'url': f'http://players.brightcove.net/6275361344001/default_default/index.html?videoId={bc_id}',
         }
