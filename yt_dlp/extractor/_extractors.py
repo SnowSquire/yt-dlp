@@ -660,7 +660,10 @@ from .floatplane import (
 from .folketinget import FolketingetIE
 from .footyroom import FootyRoomIE
 from .formula1 import Formula1IE
-from .formulae import FormulaEIE
+from .formulae import (
+    FormulaEIE,
+    FormulaEPlaylistIE,
+)
 from .fourtube import (
     FourTubeIE,
     FuxIE,
