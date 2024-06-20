@@ -11,15 +11,15 @@ class FormulaEIE(InfoExtractor):
     _TESTS = [
         {
             'url': 'https://www.fiaformulae.com/en/video/boxset/player/485168/full-race-2014-beijing-e-prix-round-1',
+
             'md5': 'TODO: md5 sum of the first 10241 bytes of the video file (use --test)',
             'info_dict': {
                 # For videos, only the 'id' and 'ext' fields are required to RUN the test:
                 'id': '6341829932112',
-                'race_id': '485168',
-                'player_id': '6275361344001',
                 'ext': 'mp4',
+                'uploader_id': '6275361344001',
                 'title': 'FULL RACE: 2014 Beijing E-Prix, Round 1',
-                'upload_date': '2023-11-27',
+                'upload_date': '20231127',
                 'thumbnail': 'https://resources.formula-e.pulselive.com/formula-e/photo/2023/11/29/60afbb09-3a08-4983-b8ec-1aebd165ca62/RR_S1_BEIIJING.jpg',
                 # 'tags': 'season:1,content:registered,label:full-race,content-tag:full-races,content-tag:beijing,video:boxset-season-one,content-tag:boxset,category:racing',
                 # Then if the test run fails, it will output the missing/incorrect fields.
@@ -34,6 +34,7 @@ class FormulaEIE(InfoExtractor):
                 #     'tags': 'count:10',
                 # * Any Python type, e.g.
                 #     'view_count': int,
+
             },
         },
     ]
@@ -56,13 +57,12 @@ class FormulaEIE(InfoExtractor):
         date = heroinfoWrapper.get('data-video-date')
 
         return {
-            'player_id': player_id,
+            'uploader_id': player_id,
             'thumbnail': thumbnail,
             'title': title,
-            'date': date,
+            'upload_date': date.replace('-', ''),
             'ie_key': 'BrightcoveNew',
-            'race_id': '485168',
             'id': bc_id,
-            '_type': 'url',
+            '_type': 'url_transparent',
             'url': f'http://players.brightcove.net/6275361344001/default_default/index.html?videoId={bc_id}',
         }
