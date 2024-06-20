@@ -45,13 +45,15 @@ class FormulaEIE(InfoExtractor):
         },
     ]
     BRIGHTCOVE_URL_TEMPLATE = 'http://players.brightcove.net/6275361344001/default_default/index.html?videoId=%s'
+    PLAYLIST_URL_TEMPLATE = 'https://api.formula-e.pulselive.com/content/formula-e/playlist/en/%s'
+    VIDEO_URL_TEMPLATE = 'https://api.formula-e.pulselive.com/content/formula-e/video/en/%s'
 
     def _real_extract(self, url):
         race_id = self._match_id(url)
         webpage = self._download_webpage(url, race_id)
 
         thumbnail = self._og_search_thumbnail(webpage)
-
+        self.to_screen(thumbnail)
         videoplayerInstance = extract_attributes(get_element_html_by_id(f'video-player__instance--{race_id}', webpage))
         bc_id = videoplayerInstance.get('data-video-id')
         player_id = videoplayerInstance.get('data-player')
@@ -76,6 +78,7 @@ class FormulaEIE(InfoExtractor):
             'id': bc_id,
             'tags': tags,
             'season': f'Season {season}',
+            'thumbnails': [{'url': thumbnail}],
             'season_number': season,
             '_type': 'url_transparent',
             'url': f'http://players.brightcove.net/6275361344001/default_default/index.html?videoId={bc_id}',
